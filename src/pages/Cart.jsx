@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Emptycart from "../assets/image/emptycart.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaTrashAlt } from "react-icons/fa";
 import Modal from "../components/Modal";
 import ChangeAddress from "../components/ChangeAddress";
+import { removeFromCart } from "../redux/CartSlice";
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [address, setAddress] = useState("main stret,2003");
   const [isModelOpen, setIsModelOpen] = useState(false);
+  const dispatch = useDispatch();
   return (
     <div className="container mx-auto py-8 min-h-96 px-4 md:px-16 lg:-px-24">
       {cart.products.length > 0 ? (
@@ -49,7 +51,10 @@ const Cart = () => {
                       <button className="text-xl px-2 border-l">+</button>
                     </div>
                     <p>${(product.quantity * product.price).toFixed(2)}</p>
-                    <button className="text-red-500 hover:text-red-700 cursor-pointer">
+                    <button
+                      className="text-red-500 hover:text-red-700 cursor-pointer"
+                      onClick={() => dispatch(removeFromCart(product.id))}
+                    >
                       <FaTrashAlt />
                     </button>
                   </div>
@@ -85,7 +90,10 @@ const Cart = () => {
             </div>
           </div>
           <Modal isModelOpen={isModelOpen} setIsModelOpen={setIsModelOpen}>
-            <ChangeAddress />
+            <ChangeAddress
+              setAddress={setAddress}
+              setIsModelOpen={setIsModelOpen}
+            />
           </Modal>
         </div>
       ) : (
